@@ -15,8 +15,14 @@ const app = express();
 app.use(express.static('public'));
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
-
+if (process.env.NODE_ENV === 'production') {
+ console.log("cors is using");
 app.use(cors());
+} 
+else{
+  console.log("cors is not using");
+}
+
 
 app.use(function(req,res,next){
   res.sendFile(path.join(process.cwd(),'public','index.html'))
@@ -28,11 +34,11 @@ require('dotenv').config();
 
 mongoose.set('returnOriginal', false);
 const { NODE_ENV, DB_HOST, DB_NAME, DB_USER, DB_PASS } = process.env;
-const connectionStr = NODE_ENV === 'development' ? `mongodb://${DB_HOST}/${DB_NAME}` : `mongodb+srv://${DB_USER}:${DB_PASS}@${DB_HOST}/${DB_NAME}?retryWrites=true&w=majority`;
+const connectionStr =  `mongodb+srv://${DB_USER}:${DB_PASS}@${DB_HOST}/${DB_NAME}?retryWrites=true&w=majority`;
 
 console.log(connectionStr);
 console.log(`Connecting to database ${DB_NAME}`);
-
+// NODE_ENV === 'development' ? `mongodb://${DB_HOST}/${DB_NAME}` :
 mongoose.connect(connectionStr, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
