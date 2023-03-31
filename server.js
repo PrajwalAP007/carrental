@@ -15,6 +15,7 @@ const app = express();
 app.use(express.static('public'));
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
+
 app.use(cors());
 
 app.use(function(req,res,next){
@@ -58,14 +59,14 @@ mongoose.connection.on('open', function () {
 });
 
 
-// const url = process.env.CONNECTION_URL;
 
-// mongoose.connect(url, {
-//   useNewUrlParser: true,
-//   useUnifiedTopology: true,
-// })
-//   .then(() => console.log('MongoDB Connected'))
-//   .catch((err) => console.log(err));
+const client = nodemailer.createTransport({
+  service: "Gmail",
+  auth: {
+      user: "carlelo264@gmail.com",
+      pass: "nqpvxvrordlfjvkw"
+  }
+});
 
 
 
@@ -125,14 +126,6 @@ app.post('/bookings', async (req, res) => {
 
 //------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
-
-const client = nodemailer.createTransport({
-  service: "Gmail",
-  auth: {
-      user: "carlelo264@gmail.com",
-      pass: "nqpvxvrordlfjvkw"
-  }
-});
 
 //-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 // Define the schema for car bookings
