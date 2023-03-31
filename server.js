@@ -1,4 +1,4 @@
-
+require('dotenv').config();
 // Import required libraries and models
 const express = require('express');
 const bodyParser = require('body-parser');
@@ -8,58 +8,53 @@ const bcrypt = require('bcryptjs');
 const nodemailer = require("nodemailer");
 const dotenv = require("dotenv");
 const path = require('path');
-dotenv.config();
+const Buynow = require('./model/buynow') // Fix model import
+const Rent = require('./model/rent') // Fix model import
+const ContactUs = require('./model/contactus') // Fix model import
+const User = require('./model/user')
+const Rentreview = require('./model/review')  // Add user model import
 const app = express();
 
 
 app.use(express.static('public'));
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
-if (process.env.NODE_ENV === 'production') {
- console.log("cors is using");
+
+
 app.use(cors());
-} 
-else{
-  console.log("cors is not using");
-}
+app.use(express.static(path.join(process.cwd(), 'public')));
 
-
-app.use(function(req,res,next){
-  res.sendFile(path.join(process.cwd(),'public','index.html'))
-});
-app.use(express.static(path.join(process.cwd(),'public')));
-
-require('dotenv').config();
 
 
 mongoose.set('returnOriginal', false);
 const { NODE_ENV, DB_HOST, DB_NAME, DB_USER, DB_PASS } = process.env;
-
 const connectionStr = NODE_ENV === 'development' ? `mongodb://${DB_HOST}/${DB_NAME}` : `mongodb+srv://${DB_USER}:${DB_PASS}@${DB_HOST}/${DB_NAME}?retryWrites=true&w=majority`;
+
 console.log(connectionStr);
 console.log(`Connecting to database ${DB_NAME}`);
-// NODE_ENV === 'development' ? `mongodb://${DB_HOST}/${DB_NAME}` :
+
 mongoose.connect(connectionStr, {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
 });
 
 const connection = mongoose.connection;
 mongoose.connection.on('error', error => {
-    console.error(`Could not connect to database ${DB_NAME}, error = `, error.message );
-    process.exit(1);
+  console.error(`Could not connect to database ${DB_NAME}, error = `, error.message);
+  process.exit(1);
 });
 mongoose.connection.on('open', function () {
-    console.log(`Connected to database ${DB_NAME}`);
+  console.log(`Connected to database ${DB_NAME}`);
 });
+
 
 
 
 const client = nodemailer.createTransport({
   service: "Gmail",
   auth: {
-      user: "carlelo264@gmail.com",
-      pass: "nqpvxvrordlfjvkw"
+    user: "carlelo264@gmail.com",
+    pass: "nqpvxvrordlfjvkw"
   }
 });
 
@@ -70,23 +65,24 @@ const client = nodemailer.createTransport({
 
 
 // Define the schema for car bookings
-const bookingSchema = new mongoose.Schema({
-  section: String,
-  email: String,
-  userId: Number,
-  IdproofNo: Number,
-  pickupLocation: String,
-  dropLocation: String,
-  pickupDate: Date,
-  dropDate: Date,
-  driverAge: Number,
-  totalRate: Number,
-  car_name:String,
-  car_model:String
-});
+// const bookingSchema = new mongoose.Schema({
+//   section: String,
+//   email: String,
+//   userId: Number,
+//   IdproofNo: Number,
+//   pickupLocation: String,
+//   dropLocation: String,
+//   pickupDate: Date,
+//   dropDate: Date,
+//   driverAge: Number,
+//   totalRate: Number,
+//   car_name: String,
+//   car_model: String
+// });
 
-// Create a new model based on the schema
-const Rent = mongoose.model('Rent', bookingSchema);
+// // Create a new model based on the schema
+// const Rent = mongoose.model('Rent', bookingSchema);
+
 app.post('/bookings', async (req, res) => {
   try {
     const currentDate = new Date();
@@ -100,7 +96,7 @@ app.post('/bookings', async (req, res) => {
     if (car) {
       return res.status(401).json({ message: 'Car is not available now' });
     }
-console.log();
+    console.log();
     const booking = new Rent(req.body);
     await booking.save();
     const email = booking.email;
@@ -142,63 +138,17 @@ console.log();
 // const Buynow = mongoose.model('Buynow', buySchema);
 
 
-// app.post('/buynow', async (req, res) => {
-//   try {
-
-//     const buynows = new Buynow(req.body);
-//     await buynows.save();
-//     const email = buynows.email;
-//     client.sendMail({
-//       from: "carlelo264@gmail.com",
-//       to: email,
-//       subject: "Your car booking details",
-//       text: `Hello ${buynows.Customer_Name} Your Car is booked. Details are ${buynows.carname}  ${buynows.carmodel} & it's price is ${buynows.price} your delivery address is  ${buynows.dropaddress} `
-//     });
-//     res.status(201).json({ message: 'Booking created successfully' });
-//   } catch (err) {
-//     console.log(err);
-//     res.status(500).json({ message: 'Failed to create booking' });
-//   }
-// });
-
-const buySchema = new mongoose.Schema({
-  section: String,
-  carname: String,
-  carmodel: String,
-  email: String,
-  userId: Number,
-  price: Number,
-  IdproofNo: Number,
-  Customer_Name: String,
-  phoneno: Number,
-  Customer_address: String,
-  dropaddress: String,
-});
-
-const Buynow = mongoose.model('Buynow', buySchema);
-
 app.post('/buynow', async (req, res) => {
   try {
-    const buynow = new Buynow({
-      section: req.body.section,
-      carname: req.body.carname,
-      carmodel: req.body.carmodel,
-      email: req.body.email,
-      userId: req.body.userId,
-      price: req.body.price,
-      IdproofNo: req.body.IdproofNo,
-      Customer_Name: req.body.Customer_Name,
-      phoneno: req.body.phoneno,
-      Customer_address: req.body.Customer_address,
-      dropaddress: req.body.dropaddress,
-    });
-    await buynow.save();
-    const email = buynow.email;
+
+    const buynows = new Buynow(req.body);
+    await buynows.save();
+    const email = buynows.email;
     client.sendMail({
       from: "carlelo264@gmail.com",
       to: email,
       subject: "Your car booking details",
-      text: `Hello ${buynow.Customer_Name}, your car is booked. Details are ${buynow.carname} ${buynow.carmodel} and its price is ${buynow.price}. Your delivery address is ${buynow.dropaddress}.`
+      text: `Hello ${buynows.Customer_Name} Your Car is booked. Details are ${buynows.carname}  ${buynows.carmodel} & it's price is ${buynows.price} your delivery address is  ${buynows.dropaddress} `
     });
     res.status(201).json({ message: 'Booking created successfully' });
   } catch (err) {
@@ -207,19 +157,65 @@ app.post('/buynow', async (req, res) => {
   }
 });
 
+// const buySchema = new mongoose.Schema({
+//   section: String,
+//   carname: String,
+//   carmodel: String,
+//   email: String,
+//   userId: Number,
+//   price: Number,
+//   IdproofNo: Number,
+//   Customer_Name: String,
+//   phoneno: Number,
+//   Customer_address: String,
+//   dropaddress: String,
+// });
+
+// const Buynow = mongoose.model('Buynow', buySchema);
+
+// app.post('/buynow', async (req, res) => {
+//   try {
+//     const buynow = new Buynow({
+//       section: req.body.section,
+//       carname: req.body.carname,
+//       carmodel: req.body.carmodel,
+//       email: req.body.email,
+//       userId: req.body.userId,
+//       price: req.body.price,
+//       IdproofNo: req.body.IdproofNo,
+//       Customer_Name: req.body.Customer_Name,
+//       phoneno: req.body.phoneno,
+//       Customer_address: req.body.Customer_address,
+//       dropaddress: req.body.dropaddress,
+//     });
+//     await buynow.save();
+//     const email = buynow.email;
+//     client.sendMail({
+//       from: "carlelo264@gmail.com",
+//       to: email,
+//       subject: "Your car booking details",
+//       text: `Hello ${buynow.Customer_Name}, your car is booked. Details are ${buynow.carname} ${buynow.carmodel} and its price is ${buynow.price}. Your delivery address is ${buynow.dropaddress}.`
+//     });
+//     res.status(201).json({ message: 'Booking created successfully' });
+//   } catch (err) {
+//     console.log(err);
+//     res.status(500).json({ message: 'Failed to create booking' });
+//   }
+// });
+
 
 //----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-const rentreviewSchema = new mongoose.Schema({
-  section: String,
-  rating: String,
-  name: String,
-  email:String,
-  review: String,
-  subsection: String,
+// const rentreviewSchema = new mongoose.Schema({
+//   section: String,
+//   rating: String,
+//   name: String,
+//   email:String,
+//   review: String,
+//   subsection: String,
 
 
-});
-const Rentreview = mongoose.model('Rentreview', rentreviewSchema);
+// });
+// const Rentreview = mongoose.model('Rentreview', rentreviewSchema);
 
 app.post('/rentsreview', async (req, res) => {
   try {
@@ -258,19 +254,19 @@ app.get('/rentsreview', async (req, res) => {
 
 
 //---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-const ConatactSchema = new mongoose.Schema({
-  phoneno: Number,
-  names: String,
-  email: String,
-  msg: String
+// const ConatactSchema = new mongoose.Schema({
+//   phoneno: Number,
+//   names: String,
+//   email: String,
+//   msg: String
 
 
-});
-const Contact = mongoose.model('Contact', ConatactSchema);
+// });
+// const Contact = mongoose.model('Contact', ConatactSchema);
 
-app.post('/contact', async (req, res) => {
+app.post('/contacts', async (req, res) => {
   try {
-    const contc = new Contact(req.body);
+    const contc = new ContactUs(req.body);
     await contc.save();
     const email = contc.email;
     client.sendMail({
@@ -286,27 +282,38 @@ app.post('/contact', async (req, res) => {
   }
 });
 
+// app.post('/ContactUs', async (req, res) => {
+//   try {
+//     const contact = new ContactUs(req.body); // Use the ContactUs model
+//     await contact.save();
+//     res.status(201).json({ message: 'Contact us message created successfully' });
+//   } catch (err) {
+//     console.log(err);
+//     res.status(500).json({ message: 'Failed to create contact us message' });
+//   }
+// });
 
 //---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 
 
-// Define the schema for user accounts
-const userSchema = new mongoose.Schema({
-  email: String,
-  password: String,
-  name: String,
-  phoneno: Number,
-  address: String,
-});
+// // Define the schema for user accounts
+// const userSchema = new mongoose.Schema({
+//   email: String,
+//   password: String,
+//   name: String,
+//   phoneno: Number,
+//   address: String,
+// });
 
-// Create a new model based on the schema
-const User = mongoose.model('User', userSchema);
+// // Create a new model based on the schema
+// const User = mongoose.model('User', userSchema);
+
 
 app.post('/signup', async (req, res) => {
   try {
     const duplicateemail = await User.findOne({ email: req.body.email });
-    if(duplicateemail){
+    if (duplicateemail) {
       return res.status(500).json({ message: 'Email id already exists' });
     }
     const hashedPassword = await bcrypt.hash(req.body.password, 10); // Hash the password with a salt of 10 rounds
@@ -343,7 +350,9 @@ app.post('/login', async (req, res) => {
   }
 });
 
-
+app.use(function (req, res, next) {
+  res.sendFile(path.join(process.cwd(), 'public', 'index.html'))
+});
 
 
 const port = process.env.PORT || 3000;
