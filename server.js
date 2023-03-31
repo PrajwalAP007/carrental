@@ -34,8 +34,8 @@ require('dotenv').config();
 
 mongoose.set('returnOriginal', false);
 const { NODE_ENV, DB_HOST, DB_NAME, DB_USER, DB_PASS } = process.env;
-const connectionStr =  `mongodb+srv://${DB_USER}:${DB_PASS}@${DB_HOST}/${DB_NAME}?retryWrites=true&w=majority`;
 
+const connectionStr = NODE_ENV === 'development' ? `mongodb://${DB_HOST}/${DB_NAME}` : `mongodb+srv://${DB_USER}:${DB_PASS}@${DB_HOST}/${DB_NAME}?retryWrites=true&w=majority`;
 console.log(connectionStr);
 console.log(`Connecting to database ${DB_NAME}`);
 // NODE_ENV === 'development' ? `mongodb://${DB_HOST}/${DB_NAME}` :
@@ -100,7 +100,7 @@ app.post('/bookings', async (req, res) => {
     if (car) {
       return res.status(401).json({ message: 'Car is not available now' });
     }
-
+console.log();
     const booking = new Rent(req.body);
     await booking.save();
     const email = booking.email;
