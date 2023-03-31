@@ -64,24 +64,6 @@ const client = nodemailer.createTransport({
 
 
 
-// Define the schema for car bookings
-// const bookingSchema = new mongoose.Schema({
-//   section: String,
-//   email: String,
-//   userId: Number,
-//   IdproofNo: Number,
-//   pickupLocation: String,
-//   dropLocation: String,
-//   pickupDate: Date,
-//   dropDate: Date,
-//   driverAge: Number,
-//   totalRate: Number,
-//   car_name: String,
-//   car_model: String
-// });
-
-// // Create a new model based on the schema
-// const Rent = mongoose.model('Rent', bookingSchema);
 
 app.post('/bookings', async (req, res) => {
   try {
@@ -119,23 +101,7 @@ app.post('/bookings', async (req, res) => {
 
 
 //-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-// Define the schema for car bookings
-// const buySchema = new mongoose.Schema({
-//   section: String,
-//   carname: String,
-//   carmodel: String,
-//   email: String,
-//   userId: Number,
-//   price: Number,
-//   IdproofNo: Number,
-//   Customer_Name: String,
-//   phoneno: Number,
-//   Customer_address: String,
-//   dropaddress: String,
-// });
 
-
-// const Buynow = mongoose.model('Buynow', buySchema);
 
 
 app.post('/buynow', async (req, res) => {
@@ -157,65 +123,11 @@ app.post('/buynow', async (req, res) => {
   }
 });
 
-// const buySchema = new mongoose.Schema({
-//   section: String,
-//   carname: String,
-//   carmodel: String,
-//   email: String,
-//   userId: Number,
-//   price: Number,
-//   IdproofNo: Number,
-//   Customer_Name: String,
-//   phoneno: Number,
-//   Customer_address: String,
-//   dropaddress: String,
-// });
 
-// const Buynow = mongoose.model('Buynow', buySchema);
-
-// app.post('/buynow', async (req, res) => {
-//   try {
-//     const buynow = new Buynow({
-//       section: req.body.section,
-//       carname: req.body.carname,
-//       carmodel: req.body.carmodel,
-//       email: req.body.email,
-//       userId: req.body.userId,
-//       price: req.body.price,
-//       IdproofNo: req.body.IdproofNo,
-//       Customer_Name: req.body.Customer_Name,
-//       phoneno: req.body.phoneno,
-//       Customer_address: req.body.Customer_address,
-//       dropaddress: req.body.dropaddress,
-//     });
-//     await buynow.save();
-//     const email = buynow.email;
-//     client.sendMail({
-//       from: "carlelo264@gmail.com",
-//       to: email,
-//       subject: "Your car booking details",
-//       text: `Hello ${buynow.Customer_Name}, your car is booked. Details are ${buynow.carname} ${buynow.carmodel} and its price is ${buynow.price}. Your delivery address is ${buynow.dropaddress}.`
-//     });
-//     res.status(201).json({ message: 'Booking created successfully' });
-//   } catch (err) {
-//     console.log(err);
-//     res.status(500).json({ message: 'Failed to create booking' });
-//   }
-// });
 
 
 //----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-// const rentreviewSchema = new mongoose.Schema({
-//   section: String,
-//   rating: String,
-//   name: String,
-//   email:String,
-//   review: String,
-//   subsection: String,
 
-
-// });
-// const Rentreview = mongoose.model('Rentreview', rentreviewSchema);
 
 app.post('/rentsreview', async (req, res) => {
   try {
@@ -254,15 +166,7 @@ app.get('/rentsreview', async (req, res) => {
 
 
 //---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-// const ConatactSchema = new mongoose.Schema({
-//   phoneno: Number,
-//   names: String,
-//   email: String,
-//   msg: String
 
-
-// });
-// const Contact = mongoose.model('Contact', ConatactSchema);
 
 app.post('/contacts', async (req, res) => {
   try {
@@ -282,32 +186,7 @@ app.post('/contacts', async (req, res) => {
   }
 });
 
-// app.post('/ContactUs', async (req, res) => {
-//   try {
-//     const contact = new ContactUs(req.body); // Use the ContactUs model
-//     await contact.save();
-//     res.status(201).json({ message: 'Contact us message created successfully' });
-//   } catch (err) {
-//     console.log(err);
-//     res.status(500).json({ message: 'Failed to create contact us message' });
-//   }
-// });
-
-//---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-
-
-
-// // Define the schema for user accounts
-// const userSchema = new mongoose.Schema({
-//   email: String,
-//   password: String,
-//   name: String,
-//   phoneno: Number,
-//   address: String,
-// });
-
-// // Create a new model based on the schema
-// const User = mongoose.model('User', userSchema);
+//-----------------------------------------------------------------------------------------------------
 
 
 app.post('/signup', async (req, res) => {
