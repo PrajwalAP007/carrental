@@ -28,7 +28,7 @@ require('dotenv').config();
 
 mongoose.set('returnOriginal', false);
 const { NODE_ENV, DB_HOST, DB_NAME, DB_USER, DB_PASS } = process.env;
-const connectionStr = NODE_ENV === 'development' ? `mongodb://${DB_HOST}/${DB_NAME}` : `mongodb+srv://${DB_USER}:${DB_PASS}@${DB_HOST}/${DB_NAME}?retryWrites=true&w=majority`;
+const connectionStr = NODE_ENV === 'production' ? `mongodb://${DB_HOST}/${DB_NAME}` : `mongodb+srv://${DB_USER}:${DB_PASS}@${DB_HOST}/${DB_NAME}?retryWrites=true&w=majority`;
 
 console.log(connectionStr);
 console.log(`Connecting to database ${DB_NAME}`);
